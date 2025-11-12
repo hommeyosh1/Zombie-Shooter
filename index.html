@@ -2,7 +2,10 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        />
         <title>TPS Zombie — Replit Starter (Ability Shield)</title>
         <style>
             html,
@@ -65,26 +68,9 @@
                 margin-bottom: 8px;
                 text-shadow: 0 2px 10px #000;
             }
-
-            /* Shared menu button style */
-            .menuBtn {
-                background: #00e5ff;
-                color: #001318;
-                border: 0;
-                padding: 14px 18px;
-                border-radius: 12px;
-                font-weight: 800;
-                font-size: 16px;
-                cursor: pointer;
-                box-shadow: 0 6px 28px #00e5ff44;
-            }
-            .menuBtn:hover {
-                box-shadow: 0 0 0 2px #00e5ff33 inset;
-            }
-
+            .menuBtn,
             #startBtn,
             #controlsBtn {
-                /* keep compatibility with existing ids */
                 background: #00e5ff;
                 color: #001318;
                 border: 0;
@@ -226,7 +212,7 @@
                 text-shadow: 0 0 10px #7cfcc799;
             }
 
-            /* Level toast */
+            /* Level toast + damage */
             #toast {
                 position: fixed;
                 top: 50%;
@@ -241,7 +227,6 @@
                 display: none;
                 z-index: 5000;
             }
-            /* Damage flash */
             #damagefx {
                 position: fixed;
                 inset: 0;
@@ -259,10 +244,10 @@
             #controlsOverlay {
                 position: fixed;
                 inset: 0;
-                display: none; /* toggled to grid when opened */
+                display: none;
                 place-items: center;
                 background: #000;
-                background-image: url("ControlMenu.png"); /* your image */
+                background-image: url("ControlMenu.png");
                 background-size: cover;
                 background-position: center;
                 z-index: 99999;
@@ -306,21 +291,6 @@
                 font-weight: 800;
                 cursor: pointer;
                 box-shadow: 0 6px 28px #00e5ff44;
-            }
-            #controlsBtn {
-                /* share look with startBtn */
-                background: #00e5ff;
-                color: #001318;
-                border: 0;
-                padding: 14px 18px;
-                border-radius: 12px;
-                font-weight: 800;
-                font-size: 16px;
-                cursor: pointer;
-                box-shadow: 0 6px 28px #00e5ff44;
-            }
-            #controlsBtn:hover {
-                box-shadow: 0 0 0 2px #00e5ff33 inset;
             }
 
             /* ===== Minimap / Sonar ===== */
@@ -379,14 +349,14 @@
             #endmenu {
                 position: fixed;
                 inset: 0;
-                display: none; /* shown on game over */
+                display: none;
                 place-items: center;
                 background: #000;
                 background-image: url("EndGameMenu.png");
-                background-size: contain; /* show the whole image */
+                background-size: contain;
                 background-position: center center;
                 background-repeat: no-repeat;
-                z-index: 10000; /* above main menu */
+                z-index: 10000;
             }
             #endmenu::before {
                 content: "";
@@ -422,7 +392,6 @@
             }
             #replayBtn,
             #quitBtn {
-                /* share styles with other menu buttons */
                 background: #00e5ff;
                 color: #001318;
                 border: 0;
@@ -436,6 +405,85 @@
             #replayBtn:hover,
             #quitBtn:hover {
                 box-shadow: 0 0 0 2px #00e5ff33 inset;
+            }
+
+            /* ===== MOBILE: Touch UI (only shown on touch devices) ===== */
+            #touchUI {
+                position: fixed;
+                inset: auto 0 0 0;
+                pointer-events: none;
+                display: none;
+                z-index: 11000;
+            }
+            .touchRow {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+                padding: 10px;
+            }
+            #joystick {
+                position: relative;
+                width: 140px;
+                height: 140px;
+                border-radius: 999px;
+                background: #0b1119aa;
+                border: 1px solid #1f2a37;
+                box-shadow: inset 0 0 18px #00e5ff22;
+                pointer-events: auto;
+                touch-action: none;
+            }
+            #stick {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 62px;
+                height: 62px;
+                margin: -31px 0 0 -31px;
+                border-radius: 999px;
+                background: #00e5ff44;
+                border: 2px solid #00e5ff88;
+            }
+            .btnCol {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .tbtn {
+                pointer-events: auto;
+                touch-action: manipulation;
+                border: 0;
+                border-radius: 12px;
+                padding: 10px 12px;
+                font-weight: 800;
+                color: #001318;
+                background: #00e5ffdd;
+                box-shadow: 0 6px 20px #00e5ff44;
+                min-width: 120px;
+            }
+            .tbtn:active {
+                transform: scale(0.98);
+            }
+            #lookPad {
+                position: relative;
+                flex: 1;
+                height: 160px;
+                margin-left: 10px;
+                border-radius: 14px;
+                background: #0b1119aa;
+                border: 1px solid #1f2a37;
+                pointer-events: auto;
+                touch-action: none;
+            }
+            @media (pointer: coarse) {
+                #touchUI {
+                    display: block;
+                }
+                #minimapWrap {
+                    right: 8px;
+                    top: auto;
+                    bottom: 180px;
+                    transform: none;
+                }
             }
         </style>
     </head>
@@ -465,7 +513,7 @@
             </div>
         </div>
 
-        <!-- ===== NEW ENDGAME MENU OVERLAY ===== -->
+        <!-- ===== ENDGAME MENU ===== -->
         <div id="endmenu" style="display: none">
             <div id="endmenu-inner">
                 <h1>Game Over</h1>
@@ -489,7 +537,7 @@
                     </tr>
                     <tr>
                         <td>Move</td>
-                        <td>W A S D</td>
+                        <td>W A S D • (Mobile: Left joystick)</td>
                     </tr>
                     <tr>
                         <td>Sprint</td>
@@ -497,19 +545,21 @@
                     </tr>
                     <tr>
                         <td>Aim &amp; Shoot</td>
-                        <td>Mouse</td>
+                        <td>
+                            Mouse • (Mobile: drag right pad &amp; Shoot button)
+                        </td>
                     </tr>
                     <tr>
                         <td>Throw Grenade</td>
-                        <td>F</td>
+                        <td>F • (Mobile: Grenade button)</td>
                     </tr>
                     <tr>
                         <td>Activate Dome Shield</td>
-                        <td>1</td>
+                        <td>1 • (Mobile: Shield button)</td>
                     </tr>
                     <tr>
                         <td>Pause / Resume</td>
-                        <td>P</td>
+                        <td>P • (Mobile: Pause button)</td>
                     </tr>
                     <tr>
                         <td>End Game / Back to Menu</td>
@@ -523,7 +573,7 @@
         <div id="pauseOverlay">
             <div id="pauseCard">
                 <div>PAUSED</div>
-                <div class="sm">Press <b>P</b> to resume</div>
+                <div class="sm">Press <b>P</b> (or Pause) to resume</div>
             </div>
         </div>
 
@@ -562,8 +612,44 @@
             <canvas id="minimapCanvas" width="304" height="304"></canvas>
         </div>
 
+        <!-- ===== MOBILE TOUCH UI (auto-shown on touch devices only) ===== -->
+        <div id="touchUI" aria-hidden="true">
+            <div class="touchRow">
+                <div id="joystick">
+                    <div id="stick"></div>
+                </div>
+                <div id="lookPad"></div>
+                <div class="btnCol">
+                    <button class="tbtn" id="btnShoot">Shoot</button>
+                    <button class="tbtn" id="btnGrenade">Grenade</button>
+                    <button class="tbtn" id="btnShield">Shield</button>
+                    <button class="tbtn" id="btnPause">Pause</button>
+                </div>
+            </div>
+        </div>
+
         <script type="module">
             import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+
+            /* ---------- helpers: device detection ---------- */
+            const isTouch =
+                matchMedia("(pointer: coarse)").matches ||
+                "ontouchstart" in window;
+            function safePointerLock(el) {
+                // Some browsers return void, some throw on mobile: guard it.
+                try {
+                    if (
+                        !document.pointerLockElement &&
+                        el?.requestPointerLock &&
+                        !isTouch
+                    ) {
+                        const maybePromise = el.requestPointerLock();
+                        // if it returns a promise, ignore resolution
+                        if (maybePromise && maybePromise.catch)
+                            maybePromise.catch(() => {});
+                    }
+                } catch {}
+            }
 
             // ---------- Basic scene ----------
             const scene = new THREE.Scene();
@@ -577,7 +663,10 @@
                 0.1,
                 1000,
             );
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            const renderer = new THREE.WebGLRenderer({
+                antialias: true,
+                powerPreference: "high-performance",
+            });
             renderer.setSize(innerWidth, innerHeight);
             renderer.setClearColor(BASE_BG, 1);
             document.body.appendChild(renderer.domElement);
@@ -746,7 +835,7 @@
             // ===== Menu + Run/Reset =====
             const menu = document.getElementById("menu");
             const startBtn = document.getElementById("startBtn");
-            const startBtnEl = document.getElementById("startBtn");
+            const startBtnEl = startBtn;
             const menuNote = document.getElementById("menu-note");
             const controlsBtn = document.getElementById("controlsBtn");
             const controlsOverlay = document.getElementById("controlsOverlay");
@@ -769,12 +858,11 @@
             // ===== Pause support =====
             const pauseOverlay = document.getElementById("pauseOverlay");
             let paused = false;
-            let bgmVolumeBeforePause = 0.75; // default
+            let bgmVolumeBeforePause = 0.75;
             function setPaused(p) {
-                if (!running && p) return; // can't pause when not in-game
+                if (!running && p) return;
                 paused = p;
                 if (paused) {
-                    // show overlay, soften audio, free cursor
                     pauseOverlay.style.display = "grid";
                     bgmVolumeBeforePause = bgm.volume;
                     bgm.volume = Math.max(0, bgm.volume * 0.35);
@@ -782,8 +870,7 @@
                 } else {
                     pauseOverlay.style.display = "none";
                     bgm.volume = bgmVolumeBeforePause;
-                    // re-lock cursor on resume
-                    renderer.domElement.requestPointerLock?.().catch(() => {});
+                    if (!isTouch) renderer.domElement.requestPointerLock?.();
                 }
             }
 
@@ -796,11 +883,8 @@
                 menu.style.display = "grid";
                 menuNote.textContent = note;
                 armMenuUnlockListeners();
-
-                // ensure the controls overlay is closed when returning to menu
                 if (typeof hideControlsOverlay === "function")
                     hideControlsOverlay();
-                // also hide end menu if it was open
                 hideEndMenu();
             }
             function hideMenu() {
@@ -808,13 +892,12 @@
                 menuNote.textContent = "";
             }
 
-            // ===== NEW: Endgame Menu controls =====
             function showEndMenu() {
                 running = false;
                 setPaused(false);
                 document.exitPointerLock?.();
                 stopMusic();
-                ensureMenuMusic(); // use the same menu music
+                ensureMenuMusic();
                 armMenuUnlockListeners();
                 finalScoreEl.textContent = score;
                 endMenu.style.display = "grid";
@@ -822,9 +905,7 @@
             function hideEndMenu() {
                 endMenu.style.display = "none";
             }
-
             function gameOver() {
-                // Old behavior showed main menu; now show Endgame Menu
                 showEndMenu();
             }
             function endToMenu() {
@@ -838,13 +919,11 @@
                 ammo = 20,
                 grenades = 4;
             const maxAmmo = 20;
-
-            /* ====== SCORING CONFIG ====== */
-            const SCORE_PER_HIT = 0; // small reward per successful hit (set 0 to disable)
-            const SCORE_KILL_ZOMBIE = 20;
-            const SCORE_KILL_BAT = 25;
-            const SCORE_KILL_BOSS = 200;
-            const EXTRA_LIFE_STEP = 2000;
+            const SCORE_PER_HIT = 0;
+            const SCORE_KILL_ZOMBIE = 20,
+                SCORE_KILL_BAT = 25,
+                SCORE_KILL_BOSS = 200,
+                EXTRA_LIFE_STEP = 2000;
 
             const scoreEl = document.getElementById("score");
             const healthEl = document.getElementById("health");
@@ -854,7 +933,6 @@
             const nadesEl = document.getElementById("nades");
             const toast = document.getElementById("toast");
 
-            // >>> EXTRA LIFE: track next milestone & helper
             let nextLifeAt = EXTRA_LIFE_STEP;
             function addScore(points) {
                 score += points;
@@ -872,8 +950,8 @@
             const abilityFillEl = document.getElementById("abilityfill");
             const abilityStateEl = document.getElementById("abilitystate");
             const ABILITY_KILLS_TO_CHARGE = 10;
-            let abilityKills = 0; // progress
-            let shield = null; // active shield data or null
+            let abilityKills = 0;
+            let shield = null;
 
             // 🔊 Sounds
             const shootSound = document.getElementById("shoot-sound");
@@ -911,7 +989,6 @@
                 if (menuBgm.paused) playMenuMusic();
             }
             function unlockMenuAudioAndFade() {
-                // unlock when any menu (main or endgame) is visible
                 if (
                     menu.style.display !== "none" ||
                     endMenu.style.display !== "none"
@@ -1072,7 +1149,6 @@
                 updateHealthUI();
             }
 
-            // Helpers (hit radius)
             function computeHitRadius(group, scale = 1) {
                 const box = new THREE.Box3().setFromObject(group);
                 const size = new THREE.Vector3();
@@ -1401,8 +1477,8 @@
                         0.3 +
                         Math.sin(performance.now() * 0.003 + (p.id || 0)) *
                             0.05;
-                    const dx = p.position.x - player.position.x;
-                    const dz = p.position.z - player.position.z;
+                    const dx = p.position.x - player.position.x,
+                        dz = p.position.z - player.position.z;
                     const dist = Math.hypot(dx, dz);
                     if (dist < 4.0 && dist > 0.0001) {
                         _tmp.set(-dx / dist, 0, -dz / dist);
@@ -1421,10 +1497,10 @@
                 });
             }
 
-            // ---------- Shooting (UPDATED per-part hitboxes + extra life scoring) ----------
-            const shootMaxDist = 400;
-            const batHitRadius = 0.5;
-            const bossHitRadiusFallback = 0.9;
+            // ---------- Shooting (per-part) ----------
+            const shootMaxDist = 400,
+                batHitRadius = 0.5,
+                bossHitRadiusFallback = 0.9;
             function getAimRay() {
                 const origin = camera.position.clone();
                 const dir = new THREE.Vector3(0, 0, -1)
@@ -1436,13 +1512,11 @@
                     ray: new THREE.Ray(origin.clone(), dir.clone()),
                 };
             }
-
-            // Returns {t, partName} for the closest intersected mesh among given parts, or null
-            const _boxTmp = new THREE.Box3();
-            const _hitPoint = new THREE.Vector3();
+            const _boxTmp = new THREE.Box3(),
+                _hitPoint = new THREE.Vector3();
             function raycastParts(ray, origin, parts) {
-                let bestT = Infinity;
-                let best = null;
+                let bestT = Infinity,
+                    best = null;
                 for (const [name, mesh] of parts) {
                     _boxTmp.setFromObject(mesh);
                     const p = ray.intersectBox(_boxTmp, _hitPoint);
@@ -1470,7 +1544,6 @@
                 const { origin, dir, ray } = getAimRay();
                 let bestHit = null;
 
-                // Zombies: precise per-part boxes with multipliers
                 zombies.forEach((z) => {
                     if (!z.alive) return;
                     const parts = [
@@ -1494,7 +1567,6 @@
                     }
                 });
 
-                // Bats: simple sphere test
                 bats.forEach((b) => {
                     if (!b.alive) return;
                     const center = b.mesh.position.clone();
@@ -1509,7 +1581,6 @@
                     }
                 });
 
-                // Boss: sphere fallback
                 bosses.forEach((bw) => {
                     if (!bw.alive) return;
                     const center = bw.mesh.position.clone();
@@ -1529,7 +1600,6 @@
                     const base = 1;
                     const dmg = Math.max(1, Math.round(base * bestHit.mult));
                     damageEnemy(bestHit.who, dmg);
-                    // small per-hit score so headshots/torso hits still feel rewarding
                     if (SCORE_PER_HIT > 0) addScore(SCORE_PER_HIT);
                     return true;
                 }
@@ -1553,8 +1623,8 @@
             // ---------- EXPLOSIONS ----------
             const explosions = new Set();
             function spawnExplosionAt(pos, scale = 1) {
-                const count = Math.floor(100 * scale);
-                const size = 0.1 * scale;
+                const count = Math.floor(100 * scale),
+                    size = 0.1 * scale;
                 const geo = new THREE.BoxGeometry(size, size, size);
                 const mat = new THREE.MeshStandardMaterial({
                     color: 0xffc26b,
@@ -1668,9 +1738,9 @@
                 });
             }
 
-            // ---------- Kill flow (ability + SCORING ON KILL) ----------
+            // ---------- Kill flow ----------
             function onEnemyKilledForAbility() {
-                if (shield) return; // no gain while active
+                if (shield) return;
                 abilityKills = Math.min(
                     ABILITY_KILLS_TO_CHARGE,
                     abilityKills + 1,
@@ -1680,12 +1750,9 @@
             function killEnemy(e) {
                 if (!e.alive) return;
                 e.alive = false;
-
-                // >>> SCORING: big points on kill by enemy type
                 if (e.type === "zombie") addScore(SCORE_KILL_ZOMBIE);
                 else if (e.type === "bat") addScore(SCORE_KILL_BAT);
                 else if (e.type === "boss") addScore(SCORE_KILL_BOSS);
-
                 const boomPos = e.mesh.getWorldPosition(new THREE.Vector3());
                 spawnExplosionAt(boomPos, 1);
                 e.mesh.traverse((n) => {
@@ -1816,9 +1883,9 @@
 
             // ---------- GRENADES ----------
             const grenadesInWorld = new Set();
-            const GRENADE_GRAVITY = 9.8 * 2.2;
-            const GRENADE_RESTITUTION = 0.45;
-            const GRENADE_FRICTION = 0.82;
+            const GRENADE_GRAVITY = 9.8 * 2.2,
+                GRENADE_RESTITUTION = 0.45,
+                GRENADE_FRICTION = 0.82;
             function startCameraShake(strength = 0.8, duration = 0.9) {
                 cameraShake.time = duration;
                 cameraShake.strength = strength;
@@ -1863,8 +1930,8 @@
             });
 
             // ---------- DOME SHIELD ABILITY ----------
-            const SHIELD_RADIUS = 3.2; // around player
-            const SHIELD_DURATION = 7.0; // seconds
+            const SHIELD_RADIUS = 3.2,
+                SHIELD_DURATION = 7.0;
             function createShieldMesh() {
                 const geo = new THREE.SphereGeometry(SHIELD_RADIUS, 48, 32);
                 const mat = new THREE.MeshBasicMaterial({
@@ -1877,7 +1944,6 @@
                 });
                 const m = new THREE.Mesh(geo, mat);
                 m.renderOrder = 9999;
-                // subtle shell outline
                 const wire = new THREE.Mesh(
                     geo,
                     new THREE.MeshBasicMaterial({
@@ -1893,14 +1959,14 @@
                 return g;
             }
             function activateShield() {
-                if (shield || abilityKills < ABILITY_KILLS_TO_CHARGE) return; // not ready
+                if (shield || abilityKills < ABILITY_KILLS_TO_CHARGE) return;
                 const mesh = createShieldMesh();
-                player.add(mesh); // follow player
+                player.add(mesh);
                 shield = { mesh, time: SHIELD_DURATION };
-                abilityKills = 0; // drain bar immediately
+                abilityKills = 0;
                 updateAbilityUI();
                 showToast("DOME SHIELD!");
-                startCameraShake(1.0, 0.7); // kick on start
+                startCameraShake(1.0, 0.7);
             }
             document.addEventListener("keydown", (e) => {
                 if (e.code === "Digit1" && pointerLocked && running && !paused)
@@ -1912,17 +1978,16 @@
             const mctx = mini.getContext("2d");
             const MAP_RADIUS_PX = mini.width * 0.48;
             const MAP_CENTER = { x: mini.width / 2, y: mini.height / 2 };
-            const MAP_RANGE_UNITS = 120; // world units visible
+            const MAP_RANGE_UNITS = 120;
             const MAP_SCALE = MAP_RADIUS_PX / MAP_RANGE_UNITS;
-            const SWEEP_SPEED = 1.6; // rad/s
-            const SWEEP_WIDTH = Math.PI / 16; // half-width
+            const SWEEP_SPEED = 1.6;
+            const SWEEP_WIDTH = Math.PI / 16;
             let sweepAngle = 0;
-
             function worldToMini(px, pz, ex, ez, yaw) {
-                const rx = ex - px;
-                const rz = ez - pz;
-                const cos = Math.cos(-yaw);
-                const sin = Math.sin(-yaw);
+                const rx = ex - px,
+                    rz = ez - pz;
+                const cos = Math.cos(-yaw),
+                    sin = Math.sin(-yaw);
                 const lx = rx * cos - rz * sin;
                 const lz = rx * sin + rz * cos;
                 const mx = MAP_CENTER.x + lx * MAP_SCALE;
@@ -1952,8 +2017,6 @@
                 mctx.beginPath();
                 mctx.arc(MAP_CENTER.x, MAP_CENTER.y, r, 0, Math.PI * 2);
                 mctx.fill();
-
-                // range rings
                 mctx.lineWidth = 2;
                 mctx.strokeStyle = "rgba(0, 229, 255, 0.10)";
                 for (let i = 1; i <= 3; i++) {
@@ -1967,8 +2030,6 @@
                     );
                     mctx.stroke();
                 }
-
-                // player caret
                 mctx.fillStyle = "rgba(255,255,255,0.9)";
                 mctx.beginPath();
                 mctx.moveTo(MAP_CENTER.x, MAP_CENTER.y - 10);
@@ -1976,8 +2037,6 @@
                 mctx.lineTo(MAP_CENTER.x + 6, MAP_CENTER.y + 8);
                 mctx.closePath();
                 mctx.fill();
-
-                // pulsing edge
                 mctx.lineWidth = 3;
                 const edgeA = 0.18 + Math.sin(bgPulseT * 2.5) * 0.06;
                 mctx.strokeStyle = `rgba(0,229,255,${edgeA.toFixed(3)})`;
@@ -2031,14 +2090,14 @@
             function drawMinimap(dt) {
                 drawMiniBorder(performance.now() * 0.001);
                 drawSweep(dt);
-                const px = player.position.x;
-                const pz = player.position.z;
-                const yawNow = yaw;
+                const px = player.position.x,
+                    pz = player.position.z,
+                    yawNow = yaw;
                 const plotSet = (set, boss = false) => {
                     set.forEach((e) => {
                         if (!e.alive) return;
-                        const ex = e.mesh.position.x;
-                        const ez = e.mesh.position.z;
+                        const ex = e.mesh.position.x,
+                            ez = e.mesh.position.z;
                         const { mx, my, distWorld, ang } = worldToMini(
                             px,
                             pz,
@@ -2067,11 +2126,150 @@
             let speed = 0;
             const baseSpeed = 3.2,
                 sprintMult = 1.7;
+
+            // ======== MOBILE INPUT STATE ========
+            const touchUI = document.getElementById("touchUI");
+            const joy = document.getElementById("joystick");
+            const stick = document.getElementById("stick");
+            const lookPad = document.getElementById("lookPad");
+            const btnShoot = document.getElementById("btnShoot");
+            const btnGren = document.getElementById("btnGrenade");
+            const btnShield = document.getElementById("btnShield");
+            const btnPause = document.getElementById("btnPause");
+
+            let joyActive = false,
+                joyStart = { x: 0, y: 0 },
+                joyVec = { x: 0, y: 0 };
+            let lookActive = false,
+                lookLast = { x: 0, y: 0 };
+
+            if (isTouch) {
+                // show touch UI
+                touchUI.style.display = "block";
+
+                // Joystick
+                const JOY_RADIUS = 56; // px from center
+                function joyUpdateTouch(t) {
+                    const rect = joy.getBoundingClientRect();
+                    const cx = rect.left + rect.width / 2;
+                    const cy = rect.top + rect.height / 2;
+                    const dx = t.clientX - cx;
+                    const dy = t.clientY - cy;
+                    const dist = Math.hypot(dx, dy);
+                    const ang = Math.atan2(dy, dx);
+                    const r = Math.min(JOY_RADIUS, dist);
+                    const nx = (Math.cos(ang) * r) / JOY_RADIUS;
+                    const ny = (Math.sin(ang) * r) / JOY_RADIUS;
+                    joyVec.x = nx;
+                    joyVec.y = ny;
+                    stick.style.left = 50 + nx * 40 + "%";
+                    stick.style.top = 50 + ny * 40 + "%";
+                }
+                joy.addEventListener(
+                    "touchstart",
+                    (e) => {
+                        e.preventDefault();
+                        joyActive = true;
+                        joyUpdateTouch(e.touches[0]);
+                    },
+                    { passive: false },
+                );
+                joy.addEventListener(
+                    "touchmove",
+                    (e) => {
+                        e.preventDefault();
+                        if (!joyActive) return;
+                        joyUpdateTouch(e.touches[0]);
+                    },
+                    { passive: false },
+                );
+                joy.addEventListener(
+                    "touchend",
+                    (e) => {
+                        e.preventDefault();
+                        joyActive = false;
+                        joyVec.x = 0;
+                        joyVec.y = 0;
+                        stick.style.left = "50%";
+                        stick.style.top = "50%";
+                    },
+                    { passive: false },
+                );
+                joy.addEventListener(
+                    "touchcancel",
+                    (e) => {
+                        e.preventDefault();
+                        joyActive = false;
+                        joyVec.x = 0;
+                        joyVec.y = 0;
+                        stick.style.left = "50%";
+                        stick.style.top = "50%";
+                    },
+                    { passive: false },
+                );
+
+                // Look pad (right side drag)
+                lookPad.addEventListener(
+                    "touchstart",
+                    (e) => {
+                        e.preventDefault();
+                        lookActive = true;
+                        const t = e.touches[0];
+                        lookLast.x = t.clientX;
+                        lookLast.y = t.clientY;
+                    },
+                    { passive: false },
+                );
+                lookPad.addEventListener(
+                    "touchmove",
+                    (e) => {
+                        e.preventDefault();
+                        if (!lookActive) return;
+                        const t = e.touches[0];
+                        const dx = t.clientX - lookLast.x;
+                        const dy = t.clientY - lookLast.y;
+                        lookLast.x = t.clientX;
+                        lookLast.y = t.clientY;
+                        // sensitivity tuned for touch
+                        yaw -= dx * 0.005;
+                        pitch -= dy * 0.004;
+                        pitch = Math.max(-1.2, Math.min(1.2, pitch));
+                    },
+                    { passive: false },
+                );
+                const endLook = () => {
+                    lookActive = false;
+                };
+                lookPad.addEventListener("touchend", endLook, {
+                    passive: false,
+                });
+                lookPad.addEventListener("touchcancel", endLook, {
+                    passive: false,
+                });
+
+                // Buttons
+                btnShoot?.addEventListener("click", () => {
+                    if (running && !paused) tryShoot();
+                });
+                btnGren?.addEventListener("click", () => {
+                    if (running && !paused) throwGrenade();
+                });
+                btnShield?.addEventListener("click", () => {
+                    if (running && !paused) activateShield();
+                });
+                btnPause?.addEventListener("click", () => {
+                    if (running) setPaused(!paused);
+                });
+
+                // On mobile we don't use pointer lock; allow taps anywhere to interact.
+                renderer.domElement.style.touchAction = "none";
+            }
+
             function animate() {
                 requestAnimationFrame(animate);
                 const dt = Math.min(0.033, clock.getDelta());
 
-                // clouds drift (even when paused for ambience)
+                // clouds drift (even when paused)
                 const drift1 = 2.0 * dt,
                     drift2 = 1.0 * dt;
                 cloudLayer1.children.forEach((s) => {
@@ -2095,14 +2293,21 @@
                     player.rotation.y = yaw;
                     forward.set(Math.sin(yaw), 0, Math.cos(yaw));
                     right.set(forward.z, 0, -forward.x);
+
                     let moveX = 0,
                         moveZ = 0;
-                    if (keys.has("KeyW")) moveZ -= 1;
-                    if (keys.has("KeyS")) moveZ += 1;
-                    if (keys.has("KeyA")) moveX -= 1;
-                    if (keys.has("KeyD")) moveX += 1;
+                    if (!isTouch) {
+                        if (keys.has("KeyW")) moveZ -= 1;
+                        if (keys.has("KeyS")) moveZ += 1;
+                        if (keys.has("KeyA")) moveX -= 1;
+                        if (keys.has("KeyD")) moveX += 1;
+                    } else {
+                        // joystick: x => strafe, y => forward/back (invert y for world Z)
+                        moveX = joyVec.x;
+                        moveZ = -joyVec.y;
+                    }
                     const moveLen = Math.hypot(moveX, moveZ) || 1;
-                    const sprinting = keys.has("Space");
+                    const sprinting = !isTouch && keys.has("Space");
                     speed = baseSpeed * (sprinting ? sprintMult : 1);
                     tmpVec
                         .copy(forward)
@@ -2120,7 +2325,7 @@
                         180,
                     );
 
-                    // Camera follow + (camera shake if any)
+                    // Camera follow + shake
                     const q = new THREE.Quaternion().setFromEuler(
                         new THREE.Euler(pitch, yaw, 0, "YXZ"),
                     );
@@ -2129,8 +2334,8 @@
                         .add(camOffset.clone().applyQuaternion(q));
                     if (cameraShake.time > 0) {
                         cameraShake.time -= dt;
-                        const t = Math.max(0, cameraShake.time);
-                        const k = cameraShake.strength * t;
+                        const t = Math.max(0, cameraShake.time),
+                            k = cameraShake.strength * t;
                         const off = new THREE.Vector3(
                             (Math.random() * 2 - 1) * 0.08 * k,
                             (Math.random() * 2 - 1) * 0.05 * k,
@@ -2141,7 +2346,7 @@
                     camera.position.lerp(desiredCam, 0.15);
                     camera.lookAt(player.position.clone().add(camLookOffset));
 
-                    // Enemies + touch damage
+                    // Enemies + contact damage (UNCHANGED core)
                     let touching = false;
                     zombies.forEach((z) => {
                         if (!z.alive) return;
@@ -2259,7 +2464,7 @@
                         }
                     });
 
-                    // Grenades physics & explosion
+                    // Grenades
                     grenadesInWorld.forEach((g) => {
                         g.fuse -= dt;
                         g.life -= dt;
@@ -2284,8 +2489,8 @@
                             );
                             spawnExplosionAt(pos, 1.6);
                             startCameraShake(1.3, 1.1);
-                            const R = 10.0;
-                            const centerKill = 2.2;
+                            const R = 10.0,
+                                centerKill = 2.2;
                             const applySplash = (e, maxDamage) => {
                                 if (!e.alive) return;
                                 const d = e.mesh.position.distanceTo(pos);
@@ -2312,7 +2517,7 @@
                         }
                     });
 
-                    // Ability: shield active behavior
+                    // Ability shield
                     if (shield) {
                         startCameraShake(0.5, 0.1);
                         shield.time -= dt;
@@ -2345,15 +2550,14 @@
                     tryCollectPickups(dt);
                 }
 
-                // 🧭 draw the radar every frame (even when paused for smooth sweep)
+                // Radar always animates
                 drawMinimap(dt);
-
                 updateExplosions(dt);
                 renderer.render(scene, camera);
             }
             animate();
 
-            // Mouse look
+            // Mouse look (desktop)
             document.addEventListener("mousemove", (e) => {
                 if (!pointerLocked || !running || paused) return;
                 yaw -= e.movementX * 0.003;
@@ -2366,9 +2570,7 @@
             });
             document.addEventListener("keydown", (e) => {
                 if (e.code === "Escape" && running) endToMenu();
-                if (e.code === "KeyP" && running) {
-                    setPaused(!paused);
-                }
+                if (e.code === "KeyP" && running) setPaused(!paused);
             });
             addEventListener("resize", () => {
                 camera.aspect = innerWidth / innerHeight;
@@ -2410,7 +2612,7 @@
                 livesEl.textContent = lives;
                 score = 0;
                 scoreEl.textContent = score;
-                nextLifeAt = EXTRA_LIFE_STEP; // <<< reset milestone
+                nextLifeAt = EXTRA_LIFE_STEP;
                 ammo = 20;
                 updateAmmoUI();
                 grenades = 4;
@@ -2429,14 +2631,15 @@
                 setPaused(false);
             }
 
-            startBtnEl.addEventListener("click", async () => {
+            // START / CONTROLS / END MENU buttons
+            startBtnEl.addEventListener("click", () => {
                 if (typeof hideControlsOverlay === "function")
                     hideControlsOverlay();
-
                 hideMenu();
                 stopMenuMusic();
                 resetGame();
-                await renderer.domElement.requestPointerLock();
+                // Only try pointer lock on non-touch devices
+                safePointerLock(renderer.domElement);
                 playLevelMusic(level);
             });
 
@@ -2448,16 +2651,14 @@
                 showMenu("");
             });
 
-            // ===== Endgame buttons =====
-            replayBtn?.addEventListener("click", async () => {
+            replayBtn?.addEventListener("click", () => {
                 hideEndMenu();
                 stopMenuMusic();
                 resetGame();
-                await renderer.domElement.requestPointerLock();
+                safePointerLock(renderer.domElement);
                 playLevelMusic(level);
             });
             quitBtn?.addEventListener("click", () => {
-                // In a web game, "quit" returns to main menu
                 hideEndMenu();
                 showMenu("");
             });
